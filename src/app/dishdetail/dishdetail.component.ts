@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 const DISH = {
   name: 'Uthappizza',
@@ -48,7 +48,8 @@ const DISH = {
   styleUrls: ['./dishdetail.component.scss']
 })
 export class DishdetailComponent implements OnInit {
-
+  
+  @Input()
   dish = DISH;
 
   constructor() { }
