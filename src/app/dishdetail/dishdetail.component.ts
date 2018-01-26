@@ -22,6 +22,7 @@ export class DishdetailComponent implements OnInit {
 
   dishFeedbackForm: FormGroup;
   dishFeedback: Comment; 
+  
 
   formErrors = {
     'author': '',
@@ -41,6 +42,7 @@ export class DishdetailComponent implements OnInit {
   };
 
   dish: Dish;
+  dishcopy = null;
   dishIds: number[];
   prev: number;
   next: number;
@@ -59,7 +61,7 @@ export class DishdetailComponent implements OnInit {
     this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
     this.route.params
       .switchMap((params: Params) => this.dishservice.getDish(+params['id']))
-      .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); },
+      .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); },
       errmess => this.errMess = <any>errmess);
       
     
@@ -85,21 +87,20 @@ export class DishdetailComponent implements OnInit {
     this.dishFeedbackForm.valueChanges
     .subscribe(data => this.onValueChanged(data));
 
-  this.onValueChanged(); // (re)set validation messages now
+    this.onValueChanged(); // (re)set validation messages now
   }
 
   onSubmit() {
     this.dishFeedback = this.dishFeedbackForm.value;
 
-    var d = new Date();
-    var n = d.toISOString();
-    this.dishFeedback.date = n;
-
-    this.dish.comments.push(this.dishFeedback);
+    this.dishFeedback = this.dishFeedbackForm.value;
+    this.dishFeedback.date = new Date().toISOString();
     console.log(this.dishFeedback);
+    this.dishcopy.comments.push(this.dishFeedback);
+    this.dishcopy.save();
     this.dishFeedbackForm.reset({
       author: '',
-      rating: '',
+      rating: 5,
       comment: ''
     });
   }
